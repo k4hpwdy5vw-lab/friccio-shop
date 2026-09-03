@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="FRICCIOSHOP — scopri i nuovi articoli e segnala quelli che ti interessano.">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.svg">
+  <title>FRICCIOSHOP</title>
+  <style>
+    :root{
+      --bg:#f5f2ec;--paper:#fff;--ink:#111;--muted:#77736d;--line:#ddd8d0;
+      --accent:#ff5a36;--accent2:#ffcf4b;--dark:#161616;--radius:26px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .shell{max-width:1040px;margin:auto;padding:0 18px 110px}
+    .top{position:sticky;top:0;z-index:20;background:rgba(245,242,236,.86);backdrop-filter:blur(18px);border-bottom:1px solid rgba(0,0,0,.06)}
+    .topin{max-width:1040px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:1000;letter-spacing:-1.6px;font-size:26px}
+    .brand b{color:var(--accent)}
+    .nav-actions{display:flex;gap:8px;align-items:center}
+    .btn{border:0;border-radius:999px;padding:12px 16px;background:var(--dark);color:#fff;font-weight:800}
+    .btn.ghost{background:#fff;color:#111;border:1px solid var(--line)}
+    .btn.orange{background:var(--accent)}
+    .btn.small{padding:9px 12px;font-size:14px}
+    .hero{margin:24px 0 22px;background:var(--dark);color:#fff;border-radius:34px;padding:32px 24px;overflow:hidden;position:relative}
+    .hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-55px;top:-45px;background:var(--accent2)}
+    .hero:before{content:"";position:absolute;width:150px;height:150px;border-radius:38px;right:85px;bottom:-80px;background:var(--accent);transform:rotate(20deg)}
+    .kicker{font-size:12px;font-weight:900;letter-spacing:2px;color:var(--accent2)}
+    h1{font-size:clamp(42px,10vw,78px);line-height:.88;margin:12px 0 16px;letter-spacing:-4px;max-width:720px}
+    .hero p{max-width:550px;color:#d7d7d7;font-size:17px;line-height:1.55;position:relative;z-index:2}
+    .hero .btn{position:relative;z-index:3;background:#fff;color:#111;margin-top:6px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:28px 0 14px}
+    h2{font-size:30px;letter-spacing:-1.2px;margin:0}
+    .muted{color:var(--muted)}
+    .filters{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+    .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 14px;font-weight:800;white-space:nowrap}
+    .chip.active{background:#111;color:#fff;border-color:#111}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .card{background:var(--paper);border-radius:24px;overflow:hidden;border:1px solid rgba(0,0,0,.05);box-shadow:0 12px 30px rgba(0,0,0,.04)}
+    .photo{aspect-ratio:4/5;background:#e9e4dc;overflow:hidden;position:relative}
+    .photo img{width:100%;height:100%;object-fit:cover;display:block}
+    .tag{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900}
+    .body{padding:15px}
+    .name{font-weight:950;font-size:18px;letter-spacing:-.4px}
+    .price{font-weight:900;color:var(--accent);margin-top:5px}
+    .sizes{font-size:13px;color:var(--muted);margin:7px 0}
+    .desc{font-size:14px;line-height:1.5;color:#555;min-height:42px}
+    .card .btn{width:100%;margin-top:12px}
+    .empty{grid-column:1/-1;background:#fff;border:1px dashed #c9c2b8;border-radius:28px;padding:44px 22px;text-align:center}
+    .empty .emoji{font-size:50px}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.56);z-index:50;display:none;align-items:flex-end;justify-content:center;padding:12px}
+    .modal.show{display:flex}
+    .sheet{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:30px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+    .sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .close{border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:20px}
+    .tabs{display:flex;background:#f2efe9;padding:5px;border-radius:999px;margin-bottom:18px}
+    .tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:999px;font-weight:900}
+    .tabs button.active{background:#fff}
+    .field{display:grid;gap:7px;margin:12px 0}
+    label{font-size:13px;font-weight:900}
+    input,textarea,select{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff;outline:none}
+    input:focus,textarea:focus,select:focus{border-color:#111}
+    textarea{min-height:96px;resize:vertical}
+    .notice{border-radius:16px;padding:12px 14px;background:#f5f2ec;color:#514d47;font-size:14px;margin:10px 0}
+    .error{background:#fff0ed;color:#9f2f19}
+    .success{background:#effaf1;color:#176b2b}
+    .adminbox{margin-top:16px;padding:16px;border-radius:20px;background:#f6f3ee}
+    .admin-products,.interest-list{display:grid;gap:10px;margin-top:12px}
+    .mini{display:flex;gap:10px;align-items:center;background:#fff;border-radius:16px;padding:10px}
+    .mini img{width:56px;height:70px;object-fit:cover;border-radius:10px}
+    .mini .grow{flex:1;min-width:0}
+    .mini strong{display:block}
+    .mini small{color:var(--muted)}
+    .danger{border:0;background:#ffe8e3;color:#a22b16;border-radius:999px;padding:8px 10px;font-weight:900}
+    .account-pill{display:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-weight:800}
+    footer{text-align:center;color:var(--muted);padding:34px 10px 0;font-size:13px}
+    @media(min-width:760px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:48px 42px}.modal{align-items:center}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="topin">
+      <div class="brand">FRICCIO<b>SHOP</b></div>
+      <div class="nav-actions">
+        <button class="account-pill" id="accountPill"></button>
+        <button class="btn ghost small" id="authBtn">Accedi</button>
+        <button class="btn small" id="adminBtn">Admin</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="kicker">NEW DROP • FRICCIOSHOP</div>
+      <h1>STILE CHE SI FA NOTARE.</h1>
+      <p>Scopri gli articoli disponibili. Registrati e premi “Mi interessa”: FRICCIOSHOP riceverà subito la tua richiesta via email.</p>
+      <button class="btn" onclick="document.querySelector('#catalogo').scrollIntoView()">Scopri il catalogo ↓</button>
+    </section>
+
+    <section id="catalogo">
+      <div class="section-head">
+        <div>
+          <div class="muted">Catalogo</div>
+          <h2>Ultimi articoli</h2>
+        </div>
+        <button class="btn ghost small" id="refreshBtn">Aggiorna</button>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <footer>FRICCIOSHOP • catalogo dimostrativo senza acquisto online</footer>
+  </main>
+
+  <div class="modal" id="authModal">
+    <div class="sheet">
+      <div class="sheet-head"><h2>Il tuo account</h2><button class="close" data-close>×</button></div>
+      <div class="tabs">
+        <button id="loginTab" class="active">Accedi</button>
+        <button id="registerTab">Registrati</button>
+      </div>
+      <form id="loginForm">
+        <div class="field"><label>Email</label><input name="email" type="email" required autocomplete="email"></div>
+        <div class="field"><label>Password</label><input name="password" type="password" required autocomplete="current-password"></div>
+        <button class="btn orange" style="width:100%">Accedi</button>
+      </form>
+      <form id="registerForm" hidden>
+        <div class="field"><label>Nome</label><input name="name" required maxlength="80"></div>
+        <div class="field"><label>Email</label><input name="email" type="email" required autocomplete="email"></div>
+        <div class="field"><label>Password</label><input name="password" type="password" minlength="6" required autocomplete="new-password"></div>
+        <button class="btn orange" style="width:100%">Crea account</button>
+      </form>
+      <div id="authMsg"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="interestModal">
+    <div class="sheet">
+      <div class="sheet-head"><h2>Mi interessa 👀</h2><button class="close" data-close>×</button></div>
+      <div id="interestProduct" class="notice"></div>
+      <form id="interestForm">
+        <input type="hidden" name="productId">
+        <div class="field"><label>Messaggio opzionale</label><textarea name="note" placeholder="Es. Mi interessa la taglia M."></textarea></div>
+        <button class="btn orange" style="width:100%">Invia interesse</button>
+      </form>
+      <div id="interestMsg"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="adminModal">
+    <div class="sheet">
+      <div class="sheet-head"><h2>Area Admin</h2><button class="close" data-close>×</button></div>
+      <div id="adminLoginBox">
+        <div class="notice">Questa sezione serve a te per caricare gli articoli direttamente dal telefono.</div>
+        <form id="adminLoginForm">
+          <div class="field"><label>Password admin</label><input type="password" name="password" required></div>
+          <button class="btn" style="width:100%">Entra come admin</button>
+        </form>
+      </div>
+
+      <div id="adminPanel" hidden>
+        <form id="productForm" enctype="multipart/form-data">
+          <div class="field"><label>Foto articolo</label><input type="file" name="image" accept="image/*" required></div>
+          <div class="field"><label>Nome articolo</label><input name="name" placeholder="Es. Felpa FRICCIO" required></div>
+          <div class="field"><label>Categoria</label>
+            <select name="category"><option>Felpe</option><option>T-shirt</option><option>Pantaloni</option><option>Giacche</option><option>Scarpe</option><option>Accessori</option><option>Altro</option></select>
+          </div>
+          <div class="field"><label>Prezzo indicativo</label><input name="price" placeholder="Es. €49"></div>
+          <div class="field"><label>Taglie</label><input name="sizes" placeholder="Es. S, M, L, XL"></div>
+          <div class="field"><label>Descrizione</label><textarea name="description" placeholder="Descrivi il capo..."></textarea></div>
+          <button class="btn orange" style="width:100%">Pubblica articolo</button>
+        </form>
+        <div id="adminMsg"></div>
+
+        <div class="adminbox">
+          <strong>Articoli pubblicati</strong>
+          <div class="admin-products" id="adminProducts"></div>
+        </div>
+
+        <div class="adminbox">
+          <strong>Richieste dei clienti</strong>
+          <div class="interest-list" id="interestList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const $ = s => document.querySelector(s);
+const state = { products: [], category: "Tutti", user: null };
+const USER_TOKEN = "friccio_user_token";
+const ADMIN_TOKEN = "friccio_admin_token";
+
+function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function moneyText(v){return v ? esc(v) : "Prezzo su richiesta"}
+function showModal(id){$(id).classList.add("show")}
+function hideModals(){document.querySelectorAll(".modal").forEach(m=>m.classList.remove("show"))}
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=hideModals);
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m) hideModals()}));
+
+async function api(url, opts={}) {
+  const r = await fetch(url, opts);
+  let d = {};
+  try{ d = await r.json() }catch{}
+  if(!r.ok) throw new Error(d.error || "Errore");
+  return d;
+}
+function authHeader(kind="user"){
+  const token = localStorage.getItem(kind==="admin"?ADMIN_TOKEN:USER_TOKEN);
+  return token ? {Authorization:`Bearer ${token}`} : {};
+}
+
+async function loadMe(){
+  const token = localStorage.getItem(USER_TOKEN);
+  if(!token){state.user=null;paintAccount();return}
+  try{
+    state.user=await api("/api/me",{headers:authHeader()});
+  }catch{
+    localStorage.removeItem(USER_TOKEN); state.user=null;
+  }
+  paintAccount();
+}
+function paintAccount(){
+  if(state.user){
+    $("#authBtn").textContent="Esci";
+    $("#accountPill").style.display="block";
+    $("#accountPill").textContent=`Ciao, ${state.user.name.split(" ")[0]}`;
+  }else{
+    $("#authBtn").textContent="Accedi";
+    $("#accountPill").style.display="none";
+  }
+}
+
+async function loadProducts(){
+  try{
+    state.products=await api("/api/products");
+    paintFilters(); paintProducts();
+  }catch(e){
+    $("#grid").innerHTML=`<div class="empty"><div class="emoji">⚠️</div><h3>${esc(e.message)}</h3></div>`;
+  }
+}
+function paintFilters(){
+  const cats=["Tutti",...new Set(state.products.map(p=>p.category).filter(Boolean))];
+  $("#filters").innerHTML=cats.map(c=>`<button class="chip ${state.category===c?"active":""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+  $("#filters").querySelectorAll("button").forEach(b=>b.onclick=()=>{state.category=b.dataset.cat;paintFilters();paintProducts()});
+}
+function paintProducts(){
+  const list=state.category==="Tutti"?state.products:state.products.filter(p=>p.category===state.category);
+  if(!list.length){
+    $("#grid").innerHTML=`<div class="empty"><div class="emoji">🛍️</div><h3>Nessun articolo ancora</h3><p class="muted">L'admin può caricare il primo prodotto direttamente dall'app.</p></div>`;
+    return;
+  }
+  $("#grid").innerHTML=list.map(p=>`
+    <article class="card">
+      <div class="photo"><img src="${esc(p.image)}" alt="${esc(p.name)}"><span class="tag">${esc(p.category)}</span></div>
+      <div class="body">
+        <div class="name">${esc(p.name)}</div>
+        <div class="price">${moneyText(p.price)}</div>
+        <div class="sizes">${p.sizes?`Taglie: ${esc(p.sizes)}`:"Taglie da chiedere"}</div>
+        <div class="desc">${esc(p.description||"")}</div>
+        <button class="btn orange interestBtn" data-id="${p.id}">Mi interessa</button>
+      </div>
+    </article>`).join("");
+  document.querySelectorAll(".interestBtn").forEach(b=>b.onclick=()=>openInterest(b.dataset.id));
+}
+function openInterest(productId){
+  if(!state.user){showModal("#authModal");return}
+  const p=state.products.find(x=>x.id===productId); if(!p)return;
+  $("#interestForm").productId.value=p.id;
+  $("#interestProduct").innerHTML=`<b>${esc(p.name)}</b><br>${moneyText(p.price)}`;
+  $("#interestMsg").innerHTML="";
+  showModal("#interestModal");
+}
+
+$("#authBtn").onclick=()=>{
+  if(state.user){localStorage.removeItem(USER_TOKEN);state.user=null;paintAccount();return}
+  showModal("#authModal");
+};
+$("#accountPill").onclick=()=>alert(`${state.user.name}\n${state.user.email}`);
+
+function authTab(which){
+  const login=which==="login";
+  $("#loginTab").classList.toggle("active",login);
+  $("#registerTab").classList.toggle("active",!login);
+  $("#loginForm").hidden=!login; $("#registerForm").hidden=login; $("#authMsg").innerHTML="";
+}
+$("#loginTab").onclick=()=>authTab("login");
+$("#registerTab").onclick=()=>authTab("register");
+
+$("#loginForm").onsubmit=async e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.currentTarget));
+  try{
+    const d=await api("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(f)});
+    localStorage.setItem(USER_TOKEN,d.token); state.user=d.user; paintAccount(); hideModals();
+  }catch(err){$("#authMsg").innerHTML=`<div class="notice error">${esc(err.message)}</div>`}
+};
+$("#registerForm").onsubmit=async e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.currentTarget));
+  try{
+    const d=await api("/api/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(f)});
+    localStorage.setItem(USER_TOKEN,d.token); state.user=d.user; paintAccount(); hideModals();
+  }catch(err){$("#authMsg").innerHTML=`<div class="notice error">${esc(err.message)}</div>`}
+};
+$("#interestForm").onsubmit=async e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.currentTarget));
+  try{
+    const d=await api("/api/interests",{method:"POST",headers:{"Content-Type":"application/json",...authHeader()},body:JSON.stringify(f)});
+    $("#interestMsg").innerHTML=`<div class="notice success">${d.emailSent?"Richiesta inviata! FRICCIOSHOP ha ricevuto l'email.":"Richiesta salvata. L'email verrà attivata appena configuriamo il servizio."}</div>`;
+    e.currentTarget.reset();
+  }catch(err){$("#interestMsg").innerHTML=`<div class="notice error">${esc(err.message)}</div>`}
+};
+
+$("#adminBtn").onclick=async()=>{
+  showModal("#adminModal");
+  if(localStorage.getItem(ADMIN_TOKEN)){await openAdminPanel()}
+};
+$("#adminLoginForm").onsubmit=async e=>{
+  e.preventDefault();
+  try{
+    const d=await api("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:new FormData(e.currentTarget).get("password")})});
+    localStorage.setItem(ADMIN_TOKEN,d.token); await openAdminPanel();
+  }catch(err){$("#adminLoginBox").insertAdjacentHTML("beforeend",`<div class="notice error">${esc(err.message)}</div>`)}
+};
+async function openAdminPanel(){
+  $("#adminLoginBox").hidden=true; $("#adminPanel").hidden=false;
+  await paintAdminProducts(); await loadInterests();
+}
+async function paintAdminProducts(){
+  await loadProducts();
+  $("#adminProducts").innerHTML=state.products.length?state.products.map(p=>`
+    <div class="mini"><img src="${esc(p.image)}"><div class="grow"><strong>${esc(p.name)}</strong><small>${esc(p.category)} • ${moneyText(p.price)}</small></div><button class="danger" data-del="${p.id}">Elimina</button></div>`).join(""):`<div class="muted">Nessun articolo.</div>`;
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{
+    if(!confirm("Eliminare questo articolo?"))return;
+    try{await api(`/api/admin/products/${b.dataset.del}`,{method:"DELETE",headers:authHeader("admin")});await paintAdminProducts()}catch(e){alert(e.message)}
+  });
+}
+$("#productForm").onsubmit=async e=>{
+  e.preventDefault(); $("#adminMsg").innerHTML=`<div class="notice">Caricamento in corso…</div>`;
+  try{
+    await api("/api/admin/products",{method:"POST",headers:authHeader("admin"),body:new FormData(e.currentTarget)});
+    e.currentTarget.reset();
+    $("#adminMsg").innerHTML=`<div class="notice success">Articolo pubblicato.</div>`;
+    await paintAdminProducts();
+  }catch(err){$("#adminMsg").innerHTML=`<div class="notice error">${esc(err.message)}</div>`}
+};
+async function loadInterests(){
+  try{
+    const rows=await api("/api/admin/interests",{headers:authHeader("admin")});
+    $("#interestList").innerHTML=rows.length?rows.map(r=>`<div class="mini"><div class="grow"><strong>${esc(r.product?.name||"Articolo rimosso")}</strong><small>${esc(r.user?.name||"Utente")} • ${esc(r.user?.email||"")}<br>${esc(r.note||"Nessun messaggio")}</small></div></div>`).join(""):`<div class="muted">Nessuna richiesta ancora.</div>`;
+  }catch(e){
+    localStorage.removeItem(ADMIN_TOKEN);
+    $("#adminPanel").hidden=true; $("#adminLoginBox").hidden=false;
+  }
+}
+
+$("#refreshBtn").onclick=loadProducts;
+if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{})}
+loadMe(); loadProducts();
+</script>
+</body>
+</html>
